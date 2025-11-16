@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.bson.Document;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.document.UserDocument;
 import com.example.demo.dto.UserBasicResponse;
 import com.example.demo.dto.UserDetailResponse;
-import com.example.demo.dto.UserRequest;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -26,7 +25,7 @@ public class UserController {
     }
     
     /**
-     * 외부 JSON을 받아서 MongoDB에 저장
+     * 외부 JSON을 받아서 MongoDB에 그대로 저장
      * 예제 JSON:
      * {
      *   "name": "홍길동",
@@ -36,8 +35,8 @@ public class UserController {
      * }
      */
     @PostMapping
-    public ResponseEntity<UserDocument> createUser(@RequestBody UserRequest request) {
-        UserDocument savedUser = userService.saveUser(request);
+    public ResponseEntity<Document> createUser(@RequestBody Document document) {
+        Document savedUser = userService.saveUser(document);
         return ResponseEntity.ok(savedUser);
     }
     
