@@ -5,6 +5,7 @@ import java.util.List;
 import org.bson.Document;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +57,31 @@ public class UserController {
     public ResponseEntity<List<UserDetailResponse>> getUsersDetail() {
         List<UserDetailResponse> users = userService.getAllUsersDetail();
         return ResponseEntity.ok(users);
+    }
+    
+    /**
+     * ObjectId로 단일 Document 조회 후 기본 정보 응답
+     * GET /api/users/{id}/basic
+     */
+    @GetMapping("/{id}/basic")
+    public ResponseEntity<UserBasicResponse> getUserBasicById(@PathVariable("id") String id) {
+        UserBasicResponse user = userService.getUserBasicById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
+    }
+    
+    /**
+     * ObjectId로 단일 Document 조회 후 상세 정보 응답
+     * GET /api/users/{id}/detail
+     */
+    @GetMapping("/{id}/detail")
+    public ResponseEntity<UserDetailResponse> getUserDetailById(@PathVariable("id") String id) {
+        UserDetailResponse user = userService.getUserDetailById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 }

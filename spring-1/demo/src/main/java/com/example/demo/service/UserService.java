@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.UserBasicResponse;
@@ -26,6 +29,7 @@ public class UserService {
         document.put("createdAt", LocalDateTime.now());
         
         // MongoTemplate을 이용해 demo 컬렉션에 저장
+
         return mongoTemplate.save(document, "demo");
     }
     
@@ -75,5 +79,33 @@ public class UserService {
         }
         return responses;
         */
+    }
+    
+    /**
+     * ObjectId로 단일 Document를 조회하여 UserBasicResponse로 변환
+     */
+    public UserBasicResponse getUserBasicById(String id) {
+        Query query = new Query(Criteria.where("_id").is(new ObjectId(id)));
+        Document document = mongoTemplate.findOne(query, Document.class, "demo");
+        
+        if (document == null) {
+            return null;
+        }
+        
+        return mongoTemplate.getConverter().read(UserBasicResponse.class, document);
+    }
+    
+    /**
+     * ObjectId로 단일 Document를 조회하여 UserDetailResponse로 변환
+     */
+    public UserDetailResponse getUserDetailById(String id) {
+        Query query = new Query(Criteria.where("_id").is(new ObjectId(id)));
+        Document document = mongoTemplate.findOne(query, Document.class, "demo");
+        
+        if (document == null) {
+            return null;
+        }
+        
+        return mongoTemplate.getConverter().read(UserDetailResponse.class, document);
     }
 }
